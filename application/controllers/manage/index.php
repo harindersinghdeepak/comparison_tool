@@ -15,7 +15,6 @@ class Index extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('manage/include/header');
-		// $this->load->view(VIEWS_PATH.'reports_sales');
 		$this->load->view('manage/include/footer');
 	}
 }

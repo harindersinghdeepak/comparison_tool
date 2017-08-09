@@ -83,3 +83,37 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+{
+	$is_https = 'https';
+}
+elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+{
+	$is_https = 'https';
+}
+elseif ( ! empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off')
+{
+	$is_https = 'https';
+}
+else
+{
+	$is_https = 'http';
+}
+
+if (isset($_SERVER['SERVER_ADDR']))
+{
+	$host_name = $is_https .'://'.$_SERVER['HTTP_HOST']
+		.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+}
+else
+{
+	$host_name = 'http://localhost/';
+}
+define('CONTROLLERS_PATH', $host_name .'index.php'.DS.'manage'.DS);
+// define models path
+define('MODELS_PATH', 'manage'.DS);
+// define views path
+define('VIEWS_PATH', DS.'manage'.DS);
+// define assets path
+define('ASSETSPATH', $host_name.'assets'.DS);

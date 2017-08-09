@@ -343,7 +343,7 @@ switch (ENVIRONMENT)
 	// define views path
 	// define('VIEWS_PATH', DS.'manage'.DS);
 	// define assets path
-	define('ASSETSPATH', $host_name.'assets'.DS);
+	// define('ASSETSPATH', $host_name.'assets'.DS);
 	// upload path
 	
 
