@@ -305,6 +305,48 @@ switch (ENVIRONMENT)
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
+	define('DS', '/');
+
+	if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+	{
+		$is_https = 'https';
+	}
+	elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+	{
+		$is_https = 'https';
+	}
+	elseif ( ! empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off')
+	{
+		$is_https = 'https';
+	}
+	else
+	{
+		$is_https = 'http';
+	}
+	
+	if (isset($_SERVER['SERVER_ADDR']))
+	{
+		$host_name = $is_https .'://'.$_SERVER['HTTP_HOST']
+			.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+	}
+	else
+	{
+		$host_name = 'http://localhost/';
+	}
+	
+	// define views js path
+	// define('VIEWPLUGINSPATH', 'assets'.DS.'js'.DS.'plugins'.DS);
+	// define controllers path
+	// define('CONTROLLERS_PATH', $host_name .'index.php'.DS.'manage'.DS);
+	// define models path
+	// define('MODELS_PATH', 'manage'.DS);
+	// define views path
+	// define('VIEWS_PATH', DS.'manage'.DS);
+	// define assets path
+	define('ASSETSPATH', $host_name.'assets'.DS);
+	// upload path
+	
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
