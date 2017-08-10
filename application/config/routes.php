@@ -54,4 +54,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['manage'] = 'manage/index';
-$route['manage/backgrounds'] = 'manage/adminlogin';
+$route['manage/backgrounds'] = 'manage/background';

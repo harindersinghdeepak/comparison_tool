@@ -18,8 +18,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
     <link href="<?= ASSETSPATH ?>css/backend/style.css" rel="stylesheet" type="text/css">
+    <link href="<?= ASSETSPATH ?>plugins/blueimp/jquery.fileupload.css" rel="stylesheet" type="text/css">
 
 	<script src="<?= ASSETSPATH ?>js/jquery.js"></script>
+	<script type="text/javascript" src="<?= ASSETSPATH ?>plugins/blueimp/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="<?= ASSETSPATH ?>plugins/blueimp/jquery.fileupload.js"></script>
+    
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,11 +59,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="index.html"><i class="fa fa-fw fa-camera"></i>&nbsp;Background</a>
-                    </li>
-
-                    <li class="active">
                         <a href="/manage/categories"><i class="fa fa-fw fa-th-list"></i>&nbsp;Manage Categories</a>
+                    </li>
+                    <li class="active">
+                        <a href="/manage/backgrounds"><i class="fa fa-fw fa-camera"></i>&nbsp;Manage Background</a>
                     </li>
                 </ul>
             </div>
