@@ -1,13 +1,13 @@
 .iEditBtn{
-	border-radius: 0px;
-	padding: 6px 40px !important;
+	/*border-radius: 0px;*/
+	/*padding: 6px !important;*/
 }
 .iTrashIcon{
 	color: grey;
 	font-size: 28px;
 }
 .btn-flat, select, input[type="search"]{
-	border-radius: 0px !important;
+	/*border-radius: 0px !important;*/
 }
 .add-new-wrapper{
 	margin: 20px 0px 60px 0px;
@@ -16,21 +16,22 @@
 	display: inline-block;
 }
 .iAddBtn{
-	color: #333333;
+	/*color: #333333;*/
 	font-size: 13px;
 	border-color: grey;
 	padding: 11px 55px !important;
 }
 .iSaveBtn{
-	color: #333333;
+	/*color: white !important;*/
 	font-size: 13px;
-	border-color: grey;
+	/*border-color: grey;*/
+	/*background-color: #6DB5DC !important;*/
 	padding: 8px 85px !important;
 }
 #add_category_modal .modal-content{
 	padding: 30px 40px 35px;
 	border: 1px solid grey;
-	border-radius: 0px !important;
+	/*border-radius: 0px !important;*/
 }
 .head_wrapper{
 	font-size: 13px;
@@ -43,7 +44,7 @@
 	padding: 0px 10px 0px 0px;
 }
 input[type="text"], input[type="password"]{
-	border-radius: 0px !important;
+	/*border-radius: 0px !important;*/
 }
 .input_wrapper input[type="text"]{
 	margin-bottom: 10px;
@@ -69,13 +70,13 @@ input[type="text"], input[type="password"]{
 	font-weight: 600;
 	margin-bottom: 40px;
 }
-.navbar-nav, .navbar-nav li{
-	background-color: white;
-}
 .navbar-fixed-top{
 	background-color: #6DB5DC;
 }
 .navbar-brand{
+	left: 85px;
+	position: absolute;
+	padding: 0px !important;
 	color: white !important;
 }
 .navbar-right .dropdown-toggle{
@@ -87,9 +88,17 @@ input[type="text"], input[type="password"]{
 body{
 	background-color: whitesmoke;
 }
+.side-nav li{
+	width: 100%;
+}
 .side-nav li a{
-	color: whitesmoke;
-	margin: 3px 2px 4px 2px;
+	width: 92%;
+	text-align: center;
+    float: none !important;
+    margin: 8px auto !important;
+	color: whitesmoke !important;
+	padding: 10px 0px !important;
+	border-radius: 12px !important;
 	background-color: #6DB5DC !important;
 }
 .iBlueBtn{
@@ -97,11 +106,17 @@ body{
 	color: whitesmoke !important;
 	background-color: #6DB5DC !important;
 }
-.paginate_button a{
-	border-radius: 0px !important;
+button.btn, a.btn{
+	border-radius: 6px !important;
+	color: white !important;
 }
-li.active a{
-	border: 0px !important;
-	color: whitesmoke !important;
+.paginate_button.active a{
+	color: white !important;
 	background-color: #6DB5DC !important;
+}
+.logoutAnch{
+	color: whitesmoke !important;
+}
+.top-nav > li > a:hover{
+	background-color: transparent;
 }

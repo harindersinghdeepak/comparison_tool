@@ -39,7 +39,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/manage/categories">Comparison Tool Admin</a>
+                <a class="navbar-brand" href="/manage/categories"><img src="/assets/images/ct.JPG" alt="logo"></a>
             </div>
 
             <?php
@@ -48,25 +48,20 @@
             {
             ?>
                 <ul class="nav navbar-right top-nav">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $is_user_loggedin['username']; ?> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/manage/login/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a></li>
-                        </ul>
-                    </li>
+                    <li><a class="logoutAnch" href="/manage/login/logout">Log Out</a></li>
                 </ul>
 
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
-                        <li class="active">
-                            <a href="/manage/library"><i class="fa fa-fw fa-image"></i>&nbsp;Manage Library</a>
+                        <li class="">
+                            <a href="/manage/library">Manage Library</a>
                         </li>
-                        <li class="active">
-                            <a href="/manage/backgrounds"><i class="fa fa-fw fa-camera"></i>&nbsp;Manage Background</a>
+                        <li class="">
+                            <a href="/manage/backgrounds">Manage Background</a>
                         </li>
 
-                        <li class="active">
-                            <a href="/manage/categories"><i class="fa fa-fw fa-th-list"></i>&nbsp;Manage Categories</a>
+                        <li class="">
+                            <a href="/manage/categories">Manage Categories</a>
                         </li>
                     </ul>
                 </div>

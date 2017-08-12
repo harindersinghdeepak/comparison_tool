@@ -1,6 +1,6 @@
     <div id="page-wrapper" class="page-wrapper">
         <div class="col-lg-12 add-new-wrapper">
-            <button class="btn btn-flat btn-default iAddBtn iBlueBtn" data-toggle="modal" data-target="#add_category_modal">Add Category</button>
+            <button class="btn iAddBtn iBlueBtn" data-toggle="modal" data-target="#add_category_modal">Add Category</button>
         </div>
         
         <div class="col-lg-12">
@@ -29,8 +29,8 @@
                                     <input type='text' class='form-control cat_nm_txt hide' value='<?php echo $valueC['category_name']; ?>'>
                                 </td>
                                 <td style="text-align: center;">
-                                    <a title="Edit" href="javascript:void(0);" onclick="edit_cat_toggle(this);" class="btn btn-flat btn-default iEditBtn iBlueBtn">Edit</a>
-                                    <button class="save_btn hide btn btn-flat btn-default iEditBtn" onclick="edit_category(this, '<?php echo $valueC['id']?>')">Save</button>
+                                    <a title="Edit" href="javascript:void(0);" onclick="edit_cat_toggle(this);" class="btn iEditBtn iBlueBtn">Edit</a>
+                                    <button class="btn iBlueBtn save_btn hide" onclick="edit_category(this, '<?php echo $valueC['id']?>')">Save</button>
                                 </td>
                                 <td style="text-align: center;">
                                     <a title="Delete" href="javascript:void(0);" onclick="delete_category(this, '<?php echo $valueC['id']?>');"><i class="fa fa-trash iTrashIcon"></i></a>
@@ -101,7 +101,7 @@
                 </form>
             </div>
             <div class="foot_btn_wrapper text-center">
-                <button class="btn btn-flat btn-default iSaveBtn iBlueBtn" onclick="save_categories(this);">Save</button>
+                <button class="btn iSaveBtn iBlueBtn" onclick="save_categories(this);">Save</button>
             </div>
         </div>
     </div>

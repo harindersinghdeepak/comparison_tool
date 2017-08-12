@@ -11,13 +11,10 @@ function save_categories()
         data: {'form_data': $('#add_category_form').serialize()},
         success: function (response)
         {
+            alert(response.message);
             if (response.status)
             {
-
-            }
-            else
-            {
-                alert(response.message);
+                window.location.reload();
             }
         }
     })
