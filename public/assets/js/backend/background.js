@@ -22,9 +22,10 @@ function backgroundImageBind(selector, id)
         add: function(e, data) {
             var uploadErrors = [];
             var acceptFileTypes = /^image\/(swf|svg|wmf|emf|eps|dxf)$/i;
-            if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+            if(data.originalFiles[0]['type'].length && $.inArray(data.originalFiles[0]['type'], ['gif','png','image/x-wmf','image/svg+xml']) == -1) {
                 uploadErrors.push('Not an accepted file type. try using swf, svg, wmf, emf, eps, dxf');
             }
+
             if(uploadErrors.length > 0) {
                 alert(uploadErrors.join("\n"));
             } else {

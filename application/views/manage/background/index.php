@@ -9,7 +9,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6">
-                <span class="btn btn-success fileinput-button">
+                <span class="btn btn-default fileinput-button">
                     <span>Add Background</span>
                     <input type="file" name="backgound" id="imageUpload-0" multiple>
                 </span>
@@ -52,7 +52,8 @@
 </div>
 <style type="text/css">
     img{
-        width: 100%;
+        width: auto;
+        height: 200px;
     }
     ul#imageHolder li{
         float: none !important;

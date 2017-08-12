@@ -10,6 +10,11 @@ class Background extends CI_Controller {
 		$this->load->library('session');
 		$this->load->model('manage/BackgroundModel');
 		
+		$is_user_loggedin = $this->session->userdata('userAccess');
+        if (!$is_user_loggedin)
+        {
+        	redirect(CONTROLLERS_PATH . 'login', 'refresh');
+        }
 	}
 
 	public function index()
