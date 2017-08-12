@@ -77,19 +77,6 @@ class Library extends CI_Controller {
 		        {
 		        	$exttn = pathinfo($originalName, PATHINFO_EXTENSION);
 
-					// if(isset($params['oldRecordId']) && $params['oldRecordId'] != '')
-					// {
-					// 	$data['updated_at'] = date('Y-m-d H:i:s');
-					// 	$this->LibraryModel->updateImage($params['oldRecordId'], $data);
-					// 	$insertId = $params['oldRecordId'];
-					// }
-					// else
-					// {
-						// $data['image_type'] = 'item';
-						// $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
-						// $insertId = $this->LibraryModel->saveImage($data);
-					// }
-					
 					echo json_encode(array('status' => 'success', 'path' => $dest, 'fileName' => $fileName));die();
 		        }
 		        else
@@ -111,28 +98,55 @@ class Library extends CI_Controller {
 	public function delete_image()
 	{
 		$id = $this->input->post('id');
-		echo $this->BackgroundModel->deleteImage($id);die();
+		echo $this->LibraryModel->deleteImage($id);die();
 	}
 
 	public function save_image()
 	{
 		$params = $this->input->post();
-		$rp = realpath(getcwd());
-		$source = $rp. DS . "uploadedFiles" . DS . 'library_temp' . DS . $params['image'];
-		$dest = DS . "uploadedFiles" . DS . 'library' . DS . $params['image'];
-		copy($source, $rp.$dest);
-
-		if(file_exists($source))
-		{
-			unlink($source);
-		}
 
 		$data['image_name'] = $params['imageName'];
 		$data['image_size'] = $params['imageSize'];
 		$data['image_category'] = $params['category'];
-		$data['image_path'] = $dest;
 		$data['image_type'] = 'item';
-		$data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
-		echo $this->LibraryModel->saveImage($data);die;
+
+		if (isset($params['serverId']))
+		{
+			if ($params['image'] != '')
+			{
+				$rp = realpath(getcwd());
+				$source = $rp. DS . "uploadedFiles" . DS . 'library_temp' . DS . $params['image'];
+				$dest = DS . "uploadedFiles" . DS . 'library' . DS . $params['image'];
+				copy($source, $rp.$dest);
+
+				if(file_exists($source))
+				{
+					unlink($source);
+				}
+
+				$data['image_path'] = $dest;
+			}
+			$data['updated_at'] = date('Y-m-d H:i:s');
+			echo $this->LibraryModel->updateImage($data, $params['serverId']);die;
+		}
+		else
+		{
+			$rp = realpath(getcwd());
+			$source = $rp. DS . "uploadedFiles" . DS . 'library_temp' . DS . $params['image'];
+			$dest = DS . "uploadedFiles" . DS . 'library' . DS . $params['image'];
+			copy($source, $rp.$dest);
+
+			if(file_exists($source))
+			{
+				unlink($source);
+			}
+			$data['image_path'] = $dest;
+			$data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
+			echo $this->LibraryModel->saveImage($data);die;
+		}
+		
+
+
+		
 	}
 }

@@ -25,7 +25,7 @@
 
         public function getLibraries($order)
         {
-            return $this->db->select('i.*, c.category_name')
+            return $this->db->select('i.*, c.category_name, c.id as cat_id')
                             ->where(array('i.status' => 1 , 'i.is_deleted' => 0, 'i.image_type' => 'item'))
                             ->join('categories as c', 'c.id = i.image_category', 'left')
                             ->order_by($order)
@@ -39,18 +39,22 @@
             return json_encode(array('status' => 'ok'));
         }
 
-        public function updateImage($id, $data )
+        public function updateImage($data, $id )
         {
-            $oldImage = $this->db->select('image_path')->where(array('id' => $id, 'image_type' => 'item'))
-                            ->get($this->tableName)
-                            ->row_array();
-            $rp = realpath(getcwd());
-            if(file_exists($rp.$oldImage['image_path']))
+            if(isset($data['image_path']) )
             {
-                unlink($rp.$oldImage['image_path']);
+                $oldImage = $this->db->select('image_path')->where(array('id' => $id, 'image_type' => 'item'))
+                                ->get($this->tableName)
+                                ->row_array();
+                $rp = realpath(getcwd());
+                if(file_exists($rp.$oldImage['image_path']))
+                {
+                    unlink($rp.$oldImage['image_path']);
+                }
             }
 
             $this->db->where(array('id' => $id, 'image_type' => 'item') )->update($this->tableName, $data);
+            return true;
         }
         
     }
