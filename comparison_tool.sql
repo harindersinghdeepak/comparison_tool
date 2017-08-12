@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
+-- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2017 at 12:39 PM
--- Server version: 5.7.14
--- PHP Version: 7.0.10
+-- Generation Time: Aug 12, 2017 at 02:51 PM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 7.1.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -135,10 +137,10 @@ INSERT INTO `images` (`id`, `image_name`, `image_size`, `image_category`, `image
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
-  `email` varchar(75) NOT NULL,
+  `email` varchar(75) DEFAULT NULL,
   `password` varchar(100) NOT NULL,
   `status` int(11) NOT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -151,7 +153,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `username`, `email`, `password`, `status`, `is_deleted`, `created_at`, `updated_at`) VALUES
-(1, 'abc', 'def', 'abc', 'harry@gamil.com', '5f4dcc3b5aa765d61d8327deb882cf99', 1, 0, '2017-08-12 00:00:00', '2017-08-12 00:00:00');
+(1, 'developer', '', 'developer', 'developer@gamil.com', '5f4dcc3b5aa765d61d8327deb882cf99', 1, 0, '2017-08-12 00:00:00', '2017-08-12 00:00:00');
 
 --
 -- Indexes for dumped tables
@@ -210,7 +212,8 @@ ALTER TABLE `images`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
