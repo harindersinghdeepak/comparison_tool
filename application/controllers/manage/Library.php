@@ -110,11 +110,16 @@ class Library extends CI_Controller {
 		$data['image_category'] = $params['category'];
 		$data['image_type'] = 'item';
 
+		$rp = realpath(getcwd());
+		if (! is_dir($rp . DS . "uploadedFiles" .DS. 'library')) 
+        {
+            mkdir($rp . DS. "uploadedFiles" . DS . 'library', 0777, true);
+        }
+		
 		if (isset($params['serverId']))
 		{
 			if ($params['image'] != '')
 			{
-				$rp = realpath(getcwd());
 				$source = $rp. DS . "uploadedFiles" . DS . 'library_temp' . DS . $params['image'];
 				$dest = DS . "uploadedFiles" . DS . 'library' . DS . $params['image'];
 				copy($source, $rp.$dest);
@@ -131,7 +136,6 @@ class Library extends CI_Controller {
 		}
 		else
 		{
-			$rp = realpath(getcwd());
 			$source = $rp. DS . "uploadedFiles" . DS . 'library_temp' . DS . $params['image'];
 			$dest = DS . "uploadedFiles" . DS . 'library' . DS . $params['image'];
 			copy($source, $rp.$dest);
@@ -144,9 +148,5 @@ class Library extends CI_Controller {
 			$data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
 			echo $this->LibraryModel->saveImage($data);die;
 		}
-		
-
-
-		
 	}
 }

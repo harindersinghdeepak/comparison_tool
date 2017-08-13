@@ -8,7 +8,11 @@ class Index extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-		// $this->load->model(MODELS_PATH.'ReportsModel');
+		$is_user_loggedin = $this->session->userdata('userAccess');
+		if (!$is_user_loggedin)
+        {
+        	redirect(CONTROLLERS_PATH . 'login', 'refresh');
+        }
 		
 	}
 

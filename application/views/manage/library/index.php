@@ -40,6 +40,8 @@
             </div>
             <br/><br/>
             <div class="col-lg-12" id="image_main_holder">
+                <div class="loader">
+                </div>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -53,9 +55,10 @@
                         </tr>
                     </thead>
                 <?php
+                $bindImage = array();
                 if($data)
                 {
-                    $cnt = 1; $bindImage = array();
+                    $cnt = 1; 
                     foreach ($data as $key => $value)
                     {
                         ?>
@@ -101,13 +104,13 @@
                         $bindImage[] = array('key' => $cnt);
                         $cnt++;   
                     }
-                    $bindImage = json_encode($bindImage);
                 }
                 else{
                     ?>
                     <tbody><tr><td colspan="7" align="center">There is no image</td></tr></tbody>
                     <?php
                 }
+                $bindImage = json_encode($bindImage);
                 ?>
                 </table>
             </div>
@@ -117,7 +120,7 @@
 </div>
 
 <style type="text/css">
-    img{
+    div#image_main_holder table img{
         width: auto;
         height: 200px;
     }
@@ -136,6 +139,11 @@
     }
     ul.option li{
         display: inline-block;
+    }
+
+    .progress{
+        width: 20%;
+        /*display: inline-block;*/
     }
 </style>
 <?php

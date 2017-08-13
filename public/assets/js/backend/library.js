@@ -58,6 +58,8 @@ function libraryImageBind(selector)
             if(uploadErrors.length > 0) {
                 alert(uploadErrors.join("\n"));
             } else {
+                $('div.loader').append('<div id="progress-'+selector+'" class="progress"><div class="progress-bar progress-bar-success"></div></div>');
+                
                 data.submit();
             }
         },
@@ -92,16 +94,17 @@ function libraryImageBind(selector)
                     alert(retData.msg);
                 }
             }
+            $('#progress-'+selector).remove();
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress').removeClass('hide');
-            $('#progress .progress-bar').css('width',progress + '%');
+            $('#progress-'+selector).removeClass('hide');
+            $('#progress-'+selector+' .progress-bar').css('width',progress + '%').text(data.files[0].name);
         },
     }).prop('disabled', !jQuery.support.fileInput).parent().addClass(jQuery.support.fileInput ? undefined : 'disabled')
     .bind('fileuploadstart', function (e, data) {
-        $('#progress').addClass('hide');
-        $('#progress .progress-bar').css('width','0%');
+        $('#progress-'+selector).addClass('hide');
+        $('#progress-'+selector+' .progress-bar').css('width','0%');
     });    
 }
 
