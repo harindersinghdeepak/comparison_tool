@@ -43,6 +43,13 @@ $(document).ready(function()
     for (var i = 0; i < bindData.length; i++) {
         editLibraryImageBind(bindData[i].key);
     }
+
+    window.onbeforeunload = function(event) {
+        if($('table tbody tr.editPending, table tbody tr.savePending').length > 0)
+        {
+            event.returnValue = "Write something clever here..";
+        }
+    };
     
 });
 
@@ -58,9 +65,17 @@ function libraryImageBind(selector)
             if(uploadErrors.length > 0) {
                 alert(uploadErrors.join("\n"));
             } else {
-                $('div.loader').append('<div id="progress-'+selector+'" class="progress"><div class="progress-bar progress-bar-success"></div></div>');
-                
+                $('div.loader').append('<div id="progress-'+ data.files[0].lastModified +'" class="progress"><div class="progress-bar progress-bar-success"></div><a href="javascript:void(0)" class="cancelProcess" id="cancel-'+ data.files[0].lastModified +'"><i class="fa fa-close"></i></a></div>');
                 data.submit();
+                $(document).on('click', 'a#cancel-'+data.files[0].lastModified, function (e) {
+                    data.abort();
+                    $('#progress-'+ data.files[0].lastModified +' .progress-bar').removeClass('progress-bar-success')
+                        .addClass('progress-bar-danger')
+                        .text('Cancelled');
+                    $('#progress-'+ data.files[0].lastModified).fadeOut(800, function(){
+                        $(this).remove();
+                    });
+                });
             }
         },
         url: '/manage/library/uploadImage',
@@ -76,11 +91,31 @@ function libraryImageBind(selector)
                     var str = '';
                     str =   '<tr id="image-container-'+ sizeId +'" class="savePending">'+
                                 '<td></td>'+
-                                '<td><img src="'+ retData['path'] +'" data-file-name="'+ retData['fileName'] +'"></td>'+
-                                '<td>'+ categoryStructure +'</td>'+
-                                '<td><input type="text" class="form-control" name="imageName"></td>'+
-                                '<td><input type="text" class="form-control" name="imageSize"></td>'+
-                                '<td><a href="javascript:void(0)" data-save-id="'+ sizeId +'" class="saveImage btn btn-default iBlueBtn btn-flat">Save</a></td>'+
+                                '<td>'+
+                                    '<div style="position: relative;text-align: center">'+
+                                        '<img src="'+ retData['path'] +'" data-file-name="'+ retData['fileName'] +'">'+
+                                        '<span class="btn btn-default fileinput-button btn-flat iBlueBtn editTool hide">'+
+                                            '<span>Update</span>'+
+                                            '<input type="file" name="image" id="imageUpload-'+ sizeId +'">'+
+                                        '</span>'+
+                                    '</div>'+
+                                '</td>'+
+                                '<td>'+
+                                    '<span class="renderTool hide" id="categoryName"></span>'+ 
+                                    categoryStructure +
+                                '</td>'+
+                                '<td>'+
+                                    '<span class="renderTool hide" id="imageName"></span>'+
+                                    '<input type="text" class="form-control editTool" name="imageName">'+
+                                '</td>'+
+                                '<td>'+
+                                    '<span class="renderTool hide" id="imageSize"></span>'+
+                                    '<input type="text" class="form-control editTool" name="imageSize">'+
+                                '</td>'+
+                                '<td>'+
+                                    '<a href="javascript:void(0)" data-id="" data-edit-id="'+ sizeId +'" class="editImage btn btn-default iBlueBtn btn-flat renderTool hide">Edit</a>'+
+                                    '<a href="javascript:void(0)" data-id="" data-save-id="'+ sizeId +'" class="saveImage btn btn-default iBlueBtn btn-flat editTool ">Save</a>'+
+                                '</td>'+
                                 '<td><a href="javascript:void(0)" data-delete-id="'+ sizeId +'" class="softDelete"><i class="fa fa-trash fa-2x"></i></a></td>'+
                                 '</div>'+
                             '</tr>';
@@ -94,17 +129,22 @@ function libraryImageBind(selector)
                     alert(retData.msg);
                 }
             }
-            $('#progress-'+selector).remove();
+            $('#progress-'+ data.files[0].lastModified).remove();
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress-'+selector).removeClass('hide');
-            $('#progress-'+selector+' .progress-bar').css('width',progress + '%').text(data.files[0].name);
+            $('#progress-'+ data.files[0].lastModified).removeClass('hide');
+            $('#progress-'+ data.files[0].lastModified +' .progress-bar').css('width',progress + '%').text(data.files[0].name);
+
+            if(progress == 100)
+            {
+                $('a#cancel-'+data.files[0].lastModified).remove();
+            }
         },
     }).prop('disabled', !jQuery.support.fileInput).parent().addClass(jQuery.support.fileInput ? undefined : 'disabled')
     .bind('fileuploadstart', function (e, data) {
-        $('#progress-'+selector).addClass('hide');
-        $('#progress-'+selector+' .progress-bar').css('width','0%');
+        // $('#progress-'+selector).addClass('hide');
+        // $('#progress-'+selector+' .progress-bar').css('width','0%');
     });    
 }
 
@@ -121,7 +161,6 @@ function saveImage(id, serverId)
             {
                 var image = $('tr#image-container-'+ id +' td img').attr('data-file-name');
             }
-            var optionText = $('tr#image-container-'+ id +' td select[name="categoryName"] option:selected').text();
         }
         else
         {
@@ -130,42 +169,68 @@ function saveImage(id, serverId)
         var category = $('tr#image-container-'+ id +' td select[name="categoryName"]').val();
         var imageName = $('tr#image-container-'+ id +' td input[name="imageName"]').val();
         var imageSize = $('tr#image-container-'+ id +' td input[name="imageSize"]').val().trim();
+        var optionText = '';
+        if($('tr#image-container-'+ id +' td select[name="categoryName"] option:selected').val() != '')
+        {
+            optionText = $('tr#image-container-'+ id +' td select[name="categoryName"] option:selected').text();
+        }
 
+        var validatioFlag = true
         if(imageSize == '')
         {
             $('tr#image-container-'+ id +' td input[name="imageSize"]').attr('placeholder', '(required)').css('color','#ff0000');
-            return false;
+            validatioFlag = false;
         }
 
-        $.ajax({
-            url: '/manage/library/save_image',
-            type: 'post',
-            dataType: 'json',
-            data: {'image' : image, 'category' : category, 'imageName' : imageName, 'imageSize' : imageSize, 'serverId' : serverId},
-            success: function (response)
-            {
-                if (typeof serverId !== 'undefined')
-                {
-                    $('table tbody tr#image-container-'+id).removeClass('editPending');
-                    $('table tbody tr#image-container-'+id + ' td .editTool').addClass('hide');
-                    $('table tbody tr#image-container-'+id + ' td .renderTool').removeClass('hide');
+        if(imageName == '')
+        {
+            $('tr#image-container-'+ id +' td input[name="imageName"]').attr('placeholder', '(required)').css('color','#ff0000');
+            validatioFlag = false;
+        }
 
-                    // image attribute update
-                    $('tr#image-container-'+ id +' td img').removeAttr('data-edit');
-                    $('tr#image-container-'+ id +' td img').removeAttr('data-file-name');
-
-                    $('tr#image-container-'+ id +' td span#categoryName').text(optionText);
-                    $('tr#image-container-'+ id +' td span#imageName').text(imageName);
-                    $('tr#image-container-'+ id +' td span#imageSize').text(imageSize);
-                }
-                else
+        if (validatioFlag)
+        {
+            $.ajax({
+                url: '/manage/library/save_image',
+                type: 'post',
+                dataType: 'json',
+                data: {'image' : image, 'category' : category, 'imageName' : imageName, 'imageSize' : imageSize, 'serverId' : serverId},
+                success: function (response)
                 {
-                    $('tr#image-container-'+ id).removeClass('savePending');
-                    $('a[data-save-id="'+ id +'"]').addClass('disabled').removeClass('saveImage');
-                    $('a[data-delete-id="'+ id +'"]').removeClass('softDelete').addClass('imageDelete').attr('data-id', response);
+                    if (typeof serverId !== 'undefined')
+                    {
+                        $('table tbody tr#image-container-'+id).removeClass('editPending');
+                        $('table tbody tr#image-container-'+id + ' td .editTool').addClass('hide');
+                        $('table tbody tr#image-container-'+id + ' td .renderTool').removeClass('hide');
+
+                        // image attribute update
+                        $('tr#image-container-'+ id +' td img').removeAttr('data-edit');
+                        $('tr#image-container-'+ id +' td img').removeAttr('data-file-name');
+
+                        $('tr#image-container-'+ id +' td span#categoryName').text( (optionText != '' ? optionText : '') );
+                        $('tr#image-container-'+ id +' td span#imageName').text(imageName);
+                        $('tr#image-container-'+ id +' td span#imageSize').text(imageSize);
+                    }
+                    else
+                    {
+                        $('tr#image-container-'+ id).removeClass('savePending');
+
+                        $('a[data-save-id="'+ id +'"], a[data-edit-id="'+ id +'"]').attr({'data-id': response});
+                        
+                        $('a[data-delete-id="'+ id +'"]').removeClass('softDelete').addClass('imageDelete').attr('data-id', response);
+
+                        $('tr#image-container-'+ id +' td span#categoryName').text( (optionText != '' ? optionText : '') );
+                        $('tr#image-container-'+ id +' td span#imageName').text(imageName);
+                        $('tr#image-container-'+ id +' td span#imageSize').text(imageSize);
+
+                        editLibraryImageBind(id);
+
+                        $('table tbody tr#image-container-'+id + ' td .editTool').addClass('hide');
+                        $('table tbody tr#image-container-'+id + ' td .renderTool').removeClass('hide');
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
 
@@ -222,7 +287,17 @@ function editLibraryImageBind(selector)
             if(uploadErrors.length > 0) {
                 alert(uploadErrors.join("\n"));
             } else {
+                $('div.loader').append('<div id="progress-'+ data.files[0].lastModified +'" class="progress"><div class="progress-bar progress-bar-success"></div><a href="javascript:void(0)" class="cancelProcess" id="cancel-'+ data.files[0].lastModified +'"><i class="fa fa-close"></i></a></div>');
                 data.submit();
+                $(document).on('click', 'a#cancel-'+data.files[0].lastModified, function (e) {
+                    data.abort();
+                    $('#progress-'+ data.files[0].lastModified +' .progress-bar').removeClass('progress-bar-success')
+                        .addClass('progress-bar-danger')
+                        .text('Cancelled');
+                    $('#progress-'+ data.files[0].lastModified).fadeOut(800, function(){
+                        $(this).remove();
+                    });
+                });
             }
         },
         url: '/manage/library/uploadImage',
@@ -243,15 +318,21 @@ function editLibraryImageBind(selector)
                     alert(retData.msg);
                 }
             }
+            $('#progress-'+ data.files[0].lastModified).remove();
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress').removeClass('hide');
-            $('#progress .progress-bar').css('width',progress + '%');
+            $('#progress-'+ data.files[0].lastModified).removeClass('hide');
+            $('#progress-'+ data.files[0].lastModified +' .progress-bar').css('width',progress + '%').text(data.files[0].name);
+
+            if(progress == 100)
+            {
+                $('a#cancel-'+data.files[0].lastModified).remove();
+            }
         },
     }).prop('disabled', !jQuery.support.fileInput).parent().addClass(jQuery.support.fileInput ? undefined : 'disabled')
     .bind('fileuploadstart', function (e, data) {
-        $('#progress').addClass('hide');
-        $('#progress .progress-bar').css('width','0%');
+        // $('#progress-'+ data.files[0].lastModified).addClass('hide');
+        // $('#progress-'+ data.files[0].lastModified +' .progress-bar').css('width','0%');
     });    
 }

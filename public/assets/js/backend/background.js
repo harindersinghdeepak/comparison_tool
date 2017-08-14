@@ -21,15 +21,25 @@ function backgroundImageBind(selector, id)
     $('#imageUpload-'+selector).fileupload({
         add: function(e, data) {
             var uploadErrors = [];
-            var acceptFileTypes = /^image\/(swf|svg|wmf|emf|eps|dxf)$/i;
-            if(data.originalFiles[0]['type'].length && $.inArray(data.originalFiles[0]['type'], ['gif','png','image/x-wmf','image/svg+xml']) == -1) {
-                uploadErrors.push('Not an accepted file type. try using swf, svg, wmf, emf, eps, dxf');
+            var acceptFileTypes = /^image\/(gif|jpe?g|png)$/i;
+            if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+                uploadErrors.push('Not an accepted file type. try using gif, jpeg, jpg, png');
             }
 
             if(uploadErrors.length > 0) {
                 alert(uploadErrors.join("\n"));
             } else {
+                $('div.loader').append('<div id="progress-'+ data.files[0].lastModified +'" class="progress"><div class="progress-bar progress-bar-success"></div><a href="javascript:void(0)" class="cancelProcess" id="cancel-'+ data.files[0].lastModified +'"><i class="fa fa-close"></i></a></div>');
                 data.submit();
+                $(document).on('click', 'a#cancel-'+data.files[0].lastModified, function (e) {
+                    data.abort();
+                    $('#progress-'+ data.files[0].lastModified +' .progress-bar').removeClass('progress-bar-success')
+                        .addClass('progress-bar-danger')
+                        .text('Cancelled');
+                    $('#progress-'+ data.files[0].lastModified).fadeOut(800, function(){
+                        $(this).remove();
+                    });
+                });
             }
         },
         url: '/manage/background/uploadImage',
@@ -48,10 +58,10 @@ function backgroundImageBind(selector, id)
                     else
                     {
                         var str = '';
-                        str = '<li class="col-lg-3" id="image-container-'+ retData['id'] +'">'+
-                                    '<div><img src="'+ retData['path'] +'"></div>'+
+                        str = '<li class="" id="image-container-'+ retData['id'] +'">'+
+                                    '<div class="text-center"><img src="'+ retData['path'] +'"></div>'+
                                     '<div class="text-center">'+
-                                        '<span class="fileinput-button">'+
+                                        '<span class="fileinput-button upload-image-button">'+
                                             '<span>Change</span>'+
                                             '<input type="file" name="backgound" id="imageUpload-'+ retData['id'] +'">'+
                                         '</span>'+
@@ -68,16 +78,22 @@ function backgroundImageBind(selector, id)
                     alert(retData.msg);
                 }
             }
+            $('#progress-'+ data.files[0].lastModified).remove();
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress').removeClass('hide');
-            $('#progress .progress-bar').css('width',progress + '%');
+            $('#progress-'+ data.files[0].lastModified).removeClass('hide');
+            $('#progress-'+ data.files[0].lastModified +' .progress-bar').css('width',progress + '%').text(data.files[0].name);
+
+            if(progress == 100)
+            {
+                $('a#cancel-'+data.files[0].lastModified).remove();
+            }
         },
     }).prop('disabled', !jQuery.support.fileInput).parent().addClass(jQuery.support.fileInput ? undefined : 'disabled')
     .bind('fileuploadstart', function (e, data) {
-        $('#progress').addClass('hide');
-        $('#progress .progress-bar').css('width','0%');
+        // $('#progress').addClass('hide');
+        // $('#progress .progress-bar').css('width','0%');
     });    
 }
 

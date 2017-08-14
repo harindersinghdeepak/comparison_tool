@@ -107,7 +107,7 @@ class Library extends CI_Controller {
 
 		$data['image_name'] = $params['imageName'];
 		$data['image_size'] = $params['imageSize'];
-		$data['image_category'] = $params['category'];
+		$data['image_category'] = (isset($params['category']) ? $params['category'] : '');
 		$data['image_type'] = 'item';
 
 		$rp = realpath(getcwd());
